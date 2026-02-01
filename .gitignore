@@ -1,0 +1,18 @@
+# Ignorar logs de Airflow
+logs/
+*.log
+
+# Ignorar archivos de sistema y Python
+__pycache__/
+*.pyc
+.DS_Store
+
+# Ignorar base de datos local de metabase (si se creó)
+*.db
+metabase-data/
+postgres_data/
+
+# Ignorar entornos virtuales y configuración de usuario
+venv/
+.env
+.user.yml

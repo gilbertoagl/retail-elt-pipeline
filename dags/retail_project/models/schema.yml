@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: tabla_limpia
+    description: "Tabla final de ventas con datos limpios y transformados."
+    columns:
+      - name: id
+        description: "Identificador único del producto."
+        tests:
+          - unique:
+              severity: error
+          - not_null:
+              severity: error
+
+      - name: title
+        tests:
+          - not_null
+
+      - name: category
+        tests:
+          - not_null
+
+      - name: price
+        description: "Precio del producto en USD."
+        tests:
+          - not_null
+      
+      - name: calificacion
+        tests:
+          - not_null
