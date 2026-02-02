@@ -1,32 +1,44 @@
 # Automated Retail ELT Pipeline (End-to-End)
 
-![Python](https://img.shields.io/badge/Python-3.9-blue)
-![Airflow](https://img.shields.io/badge/Apache%20Airflow-2.7-red)
-![dbt](https://img.shields.io/badge/dbt-Core-orange)
-![Docker](https://img.shields.io/badge/Docker-Compose-blue)
+![Python](https://img.shields.io/badge/Python-3.9-blue?style=for-the-badge&logo=python&logoColor=white)
+![Airflow](https://img.shields.io/badge/Apache%20Airflow-2.7-red?style=for-the-badge&logo=apache-airflow&logoColor=white)
+![dbt](https://img.shields.io/badge/dbt-Core-orange?style=for-the-badge&logo=dbt&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue?style=for-the-badge&logo=docker&logoColor=white)
+![Postgres](https://img.shields.io/badge/Postgres-13-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 
-**Este proyecto consta de un pipeline de datos robusto que ingesta, transforma y audita datos de ventas retail, diseñado para soportar fallos y garantizar calidad de datos.**
+**End-to-End Data Engineering Pipeline that orchestrates the ingestion, transformation, and validation of simulated retail sales data, fully deployed in Docker containers.**
 
 ---
 
-## Resultado Final (Dashboard)
+## Final Result: Compliance Dashboard
 ![Dashboard Preview](Dashboard_RetailData.png)
-*Comparativa de Ventas Reales vs Objetivos de Negocio procesada automáticamente*
+*(Metabase Visualization: Automatic comparison of Actual Sales vs Business Objectives)*
 
 ---
 
-## Caso de Negocio
-El objetivo del proyecto es procesar transacciones diarias de una tienda retail (simulada vía API) para generar un Reporte de Cumplimiento de Ventas. El sistema cruza los datos transaccionales vivos con objetivos estáticos de negocio para determinar qué categorías están cumpliendo sus KPIs.
+## Project Description
 
-## Arquitectura del Sistema
+This project simulates a real-world data environment for a Retail company. The system extracts "live" transactions from a public API, stores them in a Data Warehouse, and transforms them to answer a critical business question: **Which product categories are meeting their monthly sales targets?**
 
-El flujo de datos sigue una arquitectura ELT (Extract, Load, Transform) contenerizada en Docker:
+Unlike a traditional ETL, an **ELT (Extract, Load, Transform)** architecture was implemented, leveraging the power of PostgreSQL for heavy processing and **dbt** for data lifecycle management and quality testing.
+
+### Key Features
+* **Robust Orchestration:** Scheduled Airflow DAGs with retry handling and dependencies.
+* **Data Quality:** "Quality Gates" implemented with dbt tests that halt the pipeline if duplicates or nulls are detected.
+* **Idempotency:** The pipeline can be executed multiple times without duplicating data or creating inconsistencies.
+* **Infrastructure as Code (IaC):** The entire environment spins up with a single Docker Compose command.
+
+---
+
+## System Architecture
+
+The data flow follows a modular architecture:
 
 ```mermaid
 graph LR
-    A[API Externa] -->|Extract JSON| B(Python Script)
-    B -->|Load Raw Data| C[(PostgreSQL DW)]
+    A[External API\nFakeStoreAPI] -->|Extract JSON| B(Python Operator\nAirflow)
+    B -->|Load Raw Data| C[(PostgreSQL DW\nSchema: Public)]
     C -->|Transform & Test| D{dbt Core}
-    D -->|Materialize Tables| E[Tablas Finales]
+    D -->|Materialize Tables| E[Final Tables\nSchema: Public]
     E -->|Visualize| F[Metabase Dashboard]
 ```
